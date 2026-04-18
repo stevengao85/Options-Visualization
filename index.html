@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>期权可视化</title>
+
+
+<link href="styles.css" rel="stylesheet"/></head>
+<body>
+<div class="app">
+<section class="shell">
+<header class="shell-header">
+<div>
+<div class="eyebrow">Option Visualization · Model Driven</div>
+<h1 id="appTitle">期权可视化</h1>
+</div>
+<nav aria-label="功能切换" class="tabs">
+<button class="tab active" data-view="calculator" type="button">单个期权</button>
+<button class="tab" data-view="chain2d" type="button">期权链可视化</button>
+<button class="tab" data-view="chain3d" type="button">三维期权链</button>
+</nav>
+</header>
+<section class="tool-views">
+<div class="tool-view active" id="view-calculator">
+<div class="workspace">
+<aside class="sidebar">
+<div class="sidebar-head">
+<h2 class="sidebar-title">参数面板</h2>
+</div>
+<div class="param-list">
+<div class="param-row param-row-option-type">
+<label for="optionTypeTrigger">Call / Put</label>
+<div class="custom-select" id="optionTypeSelect">
+<button aria-expanded="false" aria-haspopup="listbox" class="custom-select-trigger" id="optionTypeTrigger" type="button">
+<span id="optionTypeLabel">Call</span>
+<span aria-hidden="true" class="custom-select-chevron"></span>
+</button>
+<div aria-label="Call or Put selection" class="custom-select-menu" id="optionTypeMenu" role="listbox">
+<button aria-selected="true" class="custom-select-option active" data-value="call" role="option" type="button">Call</button>
+<button aria-selected="false" class="custom-select-option" data-value="put" role="option" type="button">Put</button>
+</div>
+</div>
+</div>
+<div class="param-row">
+<label for="strikeInput">Strike</label>
+<input id="strikeInput" step="1" type="number" value="100"/>
+</div>
+<div class="param-row">
+<label for="stockMinInput">股票轴最小值</label>
+<input id="stockMinInput" step="1" type="number" value="0"/>
+</div>
+<div class="param-row">
+<label for="stockMaxInput">股票轴最大值</label>
+<input id="stockMaxInput" step="1" type="number" value="200"/>
+</div>
+<div class="param-row">
+<label for="daysInput">到期天数</label>
+<input id="daysInput" min="0" step="1" type="number" value="90"/>
+</div>
+<div class="param-row">
+<label for="rateInput">无风险利率 %</label>
+<input id="rateInput" step="0.1" type="number" value="4.50"/>
+</div>
+<div class="param-row">
+<label for="volInput">隐含波动率 %</label>
+<input id="volInput" min="0.01" step="0.1" type="number" value="45.00"/>
+</div>
+</div>
+<div class="param-actions">
+<button class="reset-btn" id="resetBtn" type="button">恢复默认</button>
+</div>
+</aside>
+<section class="main-stage">
+<div class="axis-stack">
+<div class="anchor-line" id="anchorLine"></div>
+<div aria-hidden="true" class="value-link-line" id="valueLinkLine"></div>
+<section class="axis-card">
+<div class="axis-head">
+<div>
+<h2 class="axis-title" id="optionAxisTitle">Call 价格</h2>
+</div>
+<div class="axis-value option">
+<span class="label" id="optionValueLabel">当前 Call 价格</span>
+<div class="value-inline option-inline">
+<span class="sub" id="moneynessBadge">ATM</span>
+<strong id="callPriceDisplay">$0.00</strong>
+</div>
+</div>
+</div>
+<div class="track-shell">
+<div class="track option-track" id="optionTrack">
+<div class="segment intrinsic" id="intrinsicFill"></div>
+<div class="segment time" id="timeFill"></div>
+<div class="handle" id="optionHandle"></div>
+</div>
+<div class="scale option-scale">
+<span class="tick strike-zero" id="optionZeroTick">$0.00</span>
+<span class="tick option-right" id="optionMaxTick">$0.00</span>
+</div>
+</div>
+<div class="legend value-fields">
+<span class="item value-item"><span class="dot intrinsic"></span><span class="field-label">内在价值：</span><span class="field-value" id="intrinsicValueDisplay">$0.00</span></span>
+<span class="item value-item"><span class="dot time"></span><span class="field-label">时间价值：</span><span class="field-value" id="timeValueDisplay">$0.00</span></span>
+</div>
+</section>
+<section class="axis-card stock-card">
+<div class="axis-head">
+<div>
+<h2 class="axis-title" id="stockAxisTitle">标的价格</h2>
+</div>
+<div class="axis-value stock">
+<span class="label" id="stockValueLabel">当前标的价格</span>
+<div class="stock-price-field-shell">
+<input aria-label="标的价格输入" class="price-input stock-price-input" id="stockPriceInput" inputmode="decimal" step="0.01" type="number" value="100.00"/>
+</div>
+</div>
+</div>
+<div class="track-shell">
+<div class="track" id="stockTrack">
+<div class="segment stock-fill" id="stockFill"></div>
+<div class="handle" id="stockHandle"></div>
+</div>
+<div class="scale">
+<span id="stockMinTick">$0.00</span>
+<span id="stockMaxTick">$200.00</span>
+</div>
+</div>
+<div class="legend">
+<span class="item"><span class="dot stock"></span>标的股票价格</span>
+</div>
+</section>
+</div>
+</section>
+</div>
+</div>
+<div class="tool-view" id="view-chain2d"><div class="workspace">
+<aside class="sidebar">
+<div class="sidebar-head">
+<h2 class="sidebar-title">期权链参数面板</h2>
+</div>
+<div class="param-list">
+<div class="param-row"><label for="chain2dSpotInput">标的现价</label><input id="chain2dSpotInput" step="0.1" type="number" value="100.0"/></div>
+<div class="param-row"><label for="chain2dDaysInput">到期天数</label><input id="chain2dDaysInput" step="1" type="number" value="90"/></div>
+<div class="param-row"><label for="chain2dRateInput">无风险利率 %</label><input id="chain2dRateInput" step="0.1" type="number" value="4.5"/></div>
+<div class="param-row"><label for="chain2dVolInput">隐含波动率 %</label><input id="chain2dVolInput" step="0.1" type="number" value="45.0"/></div>
+<div class="param-row"><label for="chain2dMinStrikeInput">行权价起点</label><input id="chain2dMinStrikeInput" step="5" type="number" value="60"/></div>
+<div class="param-row"><label for="chain2dMaxStrikeInput">行权价终点</label><input id="chain2dMaxStrikeInput" step="5" type="number" value="140"/></div>
+<div aria-hidden="true" class="param-row chain-model-spacer"></div>
+<div class="param-row toggle-row">
+<label for="chain2dShowPriceLabelsToggle">显示价格数字</label>
+<label class="switch">
+<input checked="" id="chain2dShowPriceLabelsToggle" type="checkbox"/>
+<span class="switch-slider"></span>
+</label>
+</div>
+</div>
+</aside>
+<section class="main-stage">
+<div class="global-spot-line" id="chain2dStageSpotLine"></div>
+<section class="card">
+<div class="card-head">
+<div>
+<h2 class="card-title">标的价格轴</h2>
+</div>
+</div>
+<div class="spot-ruler-wrap">
+<div class="spot-ruler" id="chain2dSpotRuler">
+<div class="ruler-track" id="chain2dRulerTrack"></div>
+</div>
+</div>
+</section>
+<section class="card">
+<div class="chain-wrap">
+<div class="chain-header">
+<div>Strike</div>
+<div class="legend-inline">
+<div class="legend-pills">
+<span class="legend-item"><span class="legend-dot call-time"></span>Call 时间价值</span>
+<span class="legend-item"><span class="legend-dot call-intrinsic"></span>Call 内在价值</span>
+<span class="legend-item"><span class="legend-dot put-intrinsic"></span>Put 内在价值</span>
+<span class="legend-item"><span class="legend-dot put-time"></span>Put 时间价值</span>
+</div>
+</div>
+</div>
+<div class="chain-grid" id="chain2dChainGrid"></div>
+</div>
+<div class="footer-note">
+<span>条形长度按同一价格刻度映射；现价线左右拖动时，整条链同步重算。</span>
+<span class="mono" id="chain2dFooterMetrics">17 strikes · CRR 250 steps</span>
+</div>
+</section>
+</section>
+</div></div>
+<div class="tool-view" id="view-chain3d">
+<canvas aria-label="三维期权链画布" id="chain3dCanvas"></canvas>
+<div class="chain3d-bubble" id="chain3dBubble">
+<div class="chain3d-bubble-body">
+<div class="chain3d-bubble-eyebrow"></div>
+<div class="chain3d-bubble-title">期权链参数配置</div>
+<div class="chain3d-bubble-grid">
+<label class="chain3d-field"><span>Call / Put</span><select id="chain3dOptionTypeInput"><option selected="" value="call">Call</option><option value="put">Put</option></select></label>
+<label class="chain3d-field"><span>最小行权价</span><input id="chain3dMinStrikeInput" step="5" type="number" value="60"/></label>
+<label class="chain3d-field"><span>最大行权价</span><input id="chain3dMaxStrikeInput" step="5" type="number" value="140"/></label>
+<label class="chain3d-field"><span>最大天数</span><input id="chain3dMaxDaysInput" step="30" type="number" value="360"/></label>
+<label class="chain3d-field"><span>无风险收益率</span><input id="chain3dRateInput" step="0.1" type="number" value="4.5"/></label>
+</div>
+<div class="chain3d-bubble-actions"><button class="chain3d-apply-btn" id="chain3dApplyBtn" type="button">确定</button></div>
+</div>
+<button aria-label="收起参数面板" class="chain3d-bubble-toggle" id="chain3dBubbleToggle" type="button">‹</button>
+</div>
+<button aria-label="展开参数面板" class="chain3d-bubble-dock" id="chain3dBubbleDock" type="button">›</button>
+<div class="chain3d-top-controls" id="chain3dTopControls">
+<div class="chain3d-top-controls-body">
+<div class="chain3d-top-controls-grid">
+<label class="chain3d-top-control" for="chain3dTopSpotInput">
+<div class="chain3d-top-control-head"><span class="chain3d-top-control-name">标的现价</span></div>
+<div class="chain3d-top-control-meta"><span aria-hidden="true" class="chain3d-top-meta-spacer"></span><span class="chain3d-top-control-tools"><input class="chain3d-top-value-input" id="chain3dTopSpotValueInput" step="1" type="number" value="100"/></span></div>
+<input class="chain3d-top-slider" id="chain3dTopSpotInput" max="140" min="60" step="1" type="range" value="100"/>
+<div class="chain3d-top-control-scale"><span id="chain3dTopSpotMin">60</span><span id="chain3dTopSpotMax">140</span></div>
+</label>
+<label class="chain3d-top-control" for="chain3dTopVolInput">
+<div class="chain3d-top-control-head"><span class="chain3d-top-control-name">隐含波动率</span></div>
+<div class="chain3d-top-control-meta"><span class="chain3d-top-control-inline chain3d-top-control-inline-left"><span class="chain3d-top-inline-caption">最大</span><input class="chain3d-top-inline-input" id="chain3dTopVolMaxInput" min="15" step="1" type="number" value="90"/></span><span class="chain3d-top-control-tools"><input class="chain3d-top-value-input" id="chain3dTopVolValueInput" min="15" step="0.1" type="number" value="45"/></span></div>
+<input class="chain3d-top-slider" id="chain3dTopVolInput" max="90" min="15" step="0.1" type="range" value="45"/>
+<div class="chain3d-top-control-scale"><span>15</span><span id="chain3dTopVolMaxTick">90</span></div>
+</label>
+<label class="chain3d-top-control" for="chain3dTopElapsedInput">
+<div class="chain3d-top-control-head"><span class="chain3d-top-control-name">流逝时间</span></div>
+<div class="chain3d-top-control-meta"><span aria-hidden="true" class="chain3d-top-meta-spacer"></span><span class="chain3d-top-control-tools"><input class="chain3d-top-value-input chain3d-top-value-elapsed" id="chain3dTopElapsedValueInput" min="0" step="1" type="number" value="0"/></span></div>
+<input class="chain3d-top-slider" id="chain3dTopElapsedInput" max="360" min="0" step="1" type="range" value="0"/>
+<div class="chain3d-top-control-scale"><span>0</span><span id="chain3dTopElapsedMax">360</span></div>
+</label>
+</div>
+</div>
+<button aria-label="收起顶部面板" class="chain3d-top-toggle" id="chain3dTopToggle" type="button">⌃</button>
+</div>
+<button aria-label="展开顶部面板" class="chain3d-top-dock" id="chain3dTopDock" type="button">⌄</button>
+<div class="chain3d-bubble chain3d-locator-bubble" id="chain3dLocatorBubble">
+<div class="chain3d-bubble-body">
+<div class="chain3d-bubble-eyebrow"></div>
+<div class="chain3d-bubble-title">期权定位器</div>
+<div class="chain3d-bubble-grid">
+<label class="chain3d-field"><span>行权价</span><select id="chain3dLocatorStrikeSelect"></select></label>
+<label class="chain3d-field"><span>月份</span><select id="chain3dLocatorMonthSelect"></select></label>
+</div>
+<div class="chain3d-bubble-actions"><button class="chain3d-apply-btn" id="chain3dLocatorApplyBtn" type="button">确定</button></div>
+</div>
+<button aria-label="收起期权定位器" class="chain3d-locator-toggle" id="chain3dLocatorToggle" type="button">›</button>
+</div>
+<button aria-label="展开期权定位器" class="chain3d-locator-dock" id="chain3dLocatorDock" type="button">‹</button>
+<div class="chain3d-bubble chain3d-priceboard-bubble" id="chain3dPriceBoard">
+<div class="chain3d-priceboard-body">
+<div class="chain3d-bubble-eyebrow"></div>
+<div class="chain3d-bubble-title">期权价格看板</div>
+<div class="chain3d-priceboard-grid">
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">期权价格</span><span class="chain3d-priceboard-value" id="chain3dBoardPrice">--</span></div>
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">内在价值</span><span class="chain3d-priceboard-value" id="chain3dBoardIntrinsic">--</span></div>
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">时间价值</span><span class="chain3d-priceboard-value" id="chain3dBoardTimeValue">--</span></div>
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">有效杠杆率</span><span class="chain3d-priceboard-value" id="chain3dBoardLeverage">--</span></div>
+<div class="chain3d-priceboard-row chain3d-priceboard-statusrow"><span class="chain3d-priceboard-state" id="chain3dBoardMoneyness">--</span></div>
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">Delta</span><span class="chain3d-priceboard-value" id="chain3dBoardDelta">--</span></div>
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">Vega</span><span class="chain3d-priceboard-value" id="chain3dBoardVega">--</span></div>
+<div class="chain3d-priceboard-row"><span class="chain3d-priceboard-label">Theta</span><span class="chain3d-priceboard-value" id="chain3dBoardTheta">--</span></div>
+</div>
+</div>
+<button aria-label="收起期权价格看板" class="chain3d-priceboard-toggle" id="chain3dPriceBoardToggle" type="button">›</button>
+</div>
+<button aria-label="展开期权价格看板" class="chain3d-priceboard-dock" id="chain3dPriceBoardDock" type="button">‹</button>
+<div aria-label="底部显示控制" class="chain3d-bottom-controls" id="chain3dBottomControls">
+<div class="chain3d-bottom-controls-body">
+<label class="chain3d-bottom-toggle"><span>显示网格</span><input checked="" id="chain3dBottomShowGrid" type="checkbox"/></label>
+</div>
+</div>
+<div aria-label="价格显示控制" class="chain3d-price-panel" id="chain3dPricePanel">
+<div class="chain3d-price-panel-body">
+<label class="chain3d-price-toggle"><span>显示价格</span><input id="chain3dPriceToggle" type="checkbox"/></label>
+</div>
+</div>
+</div>
+</section>
+</section>
+</div>
+
+<script src="script.js"></script></body>
+</html>
