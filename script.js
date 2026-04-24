@@ -1270,6 +1270,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!el) return;
       el.classList.toggle('active', name === viewName);
     });
+
+    if (guideBtn) {
+      const isChain3d = viewName === 'chain3d';
+      guideBtn.style.display = isChain3d ? 'inline-flex' : 'none';
+      if (!isChain3d) closeGuideModal();
+    }
+
     if (viewName === 'chain3d') {
       requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
     }
