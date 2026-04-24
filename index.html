@@ -17,11 +17,14 @@
 <div class="eyebrow">Option Visualization · Model Driven</div>
 <h1 id="appTitle">期权可视化</h1>
 </div>
+<div class="header-actions">
+<button class="guide-btn" id="guideBtn" type="button">使用指南</button>
 <nav aria-label="功能切换" class="tabs">
 <button class="tab active" data-view="calculator" type="button">单个期权</button>
 <button class="tab" data-view="chain2d" type="button">期权链可视化</button>
-<button class="tab" data-view="chain3d" type="button">三维期权曲面</button>
+<button class="tab" data-view="chain3d" type="button">三维期权链</button>
 </nav>
+</div>
 </header>
 <section class="tool-views">
 <div class="tool-view active" id="view-calculator">
@@ -284,5 +287,56 @@
 </section>
 </div>
 
+<div aria-hidden="true" class="guide-modal is-hidden" id="guideModal">
+<div class="guide-modal-backdrop" id="guideModalBackdrop"></div>
+<div aria-labelledby="guideModalTitle" aria-modal="true" class="guide-modal-dialog" role="dialog">
+<div class="guide-modal-header">
+<h2 id="guideModalTitle">使用指南</h2>
+<button aria-label="关闭使用指南" class="guide-modal-close" id="guideModalClose" type="button">×</button>
+</div>
+<div class="guide-modal-body">
+<section class="guide-section">
+<h3>1. 功能概览</h3>
+<p>左上角为“期权链参数配置”，用于选择期权方向（Call/Put）、设定最小行权价、最大行权价、最大天数、无风险收益率。</p>
+<p>顶部中间为动态参数条，用于调节标的现价、隐含波动率、流逝时间。</p>
+<p>右上角为“期权定位器”，可按行权价和月份直接定位某一只期权。</p>
+</section>
+<section class="guide-section">
+<h3>2. 操作方式</h3>
+<p>鼠标左键拖动：平移图形。</p>
+<p>鼠标左键单击可选中单一期权或期权链。</p>
+<p>鼠标右键：清除当前锁定选中状态。</p>
+<p>鼠标滚轮：缩放图形。</p>
+<p>在图形不同区域拖动时，旋转方向会围绕底平面几何中心变化。</p>
+</section>
+<section class="guide-section">
+<h3>3. 期权价格显示</h3>
+<p>曲面上的点表示对应行权价与到期时间下的期权价格。</p>
+<p>绿色层表示内在价值相关层。</p>
+<p>紫色层与绿色层之间的距离表示时间价值。</p>
+<p>曲面高度代表价格大小，越高表示价格越大。</p>
+</section>
+<section class="guide-section">
+<h3>4. 价格影响因素</h3>
+<p>标的现价变化会影响整张期权曲面的价格高度。</p>
+<p>隐含波动率变化会影响期权价格与曲面形状。</p>
+<p>流逝时间变化会改变有效剩余时间，从而影响价格曲面。</p>
+<p>这些调整只改变价格层，不改变坐标轴范围。</p>
+</section>
+<section class="guide-section">
+<h3>5. 定位单个期权或期权链</h3>
+<p>鼠标悬浮到单个期权点时，可查看高亮效果。</p>
+<p>鼠标左击某个期权点，可锁定该期权并显示价格柱。</p>
+<p>锁定后会显示对应的行权价和到期时间辅助线。</p>
+<p>右上角“期权定位器”可通过下拉选择行权价与月份，再点击“确定”直接锁定目标期权。</p>
+</section>
+<section class="guide-section">
+<h3>6. 显示控制</h3>
+<p>选中单个期权或期权链时，会弹出“显示数字”：控制曲面价格数字是否显示。</p>
+<p>鼠标接近页面底部有“显示网格”：控制曲面网格和价格点是否显示。</p>
+</section>
+</div>
+</div>
+</div>
 <script src="script.js"></script></body>
 </html>

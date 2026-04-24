@@ -1228,11 +1228,41 @@ const state = {
 
 document.addEventListener('DOMContentLoaded', () => {
   const tabs = Array.from(document.querySelectorAll('.tabs .tab[data-view]'));
+  const guideBtn = document.getElementById('guideBtn');
+  const guideModal = document.getElementById('guideModal');
+  const guideModalBackdrop = document.getElementById('guideModalBackdrop');
+  const guideModalClose = document.getElementById('guideModalClose');
   const views = {
     calculator: document.getElementById('view-calculator'),
     chain2d: document.getElementById('view-chain2d'),
     chain3d: document.getElementById('view-chain3d'),
   };
+
+  const openGuideModal = () => {
+    if (!guideModal) return;
+    guideModal.classList.remove('is-hidden');
+    guideModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeGuideModal = () => {
+    if (!guideModal) return;
+    guideModal.classList.add('is-hidden');
+    guideModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  guideBtn?.addEventListener('click', openGuideModal);
+  guideModalClose?.addEventListener('click', closeGuideModal);
+  guideModalBackdrop?.addEventListener('click', closeGuideModal);
+  guideModal?.addEventListener('click', (event) => {
+    if (event.target === guideModal) closeGuideModal();
+  });
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && guideModal && !guideModal.classList.contains('is-hidden')) {
+      closeGuideModal();
+    }
+  });
 
   function switchView(viewName) {
     tabs.forEach((tab) => tab.classList.toggle('active', tab.dataset.view === viewName));
